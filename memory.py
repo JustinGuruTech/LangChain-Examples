@@ -27,7 +27,6 @@ llm_hugging_face = HuggingFaceHub(
 ) 
 
 #endregion
-
 #region Contextual Conversation
 # - Calls to the API don't have memory or context which is very limiting
 # - A ConversationChain can be used to maintain memory/context across multiple calls
