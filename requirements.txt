@@ -1,0 +1,4 @@
+# requirements.txt
+langchain
+openai
+huggingface_hub
