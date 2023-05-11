@@ -2,3 +2,4 @@
 langchain
 openai
 huggingface_hub
+google-search-results
