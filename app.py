@@ -1,37 +1,14 @@
-from dotenv import load_dotenv
-import os
+# This file demonstrates the usage of LLMChain with OpenAI and HuggingFace Language Models.
+# It shows how to build a prompt, create an LLMChain, and run the chain with different Language Models.
+
 
 from langchain import LLMChain, PromptTemplate
-from langchain.llms import OpenAI
-from langchain.llms import HuggingFaceHub
+from config import default_llm_open_ai, default_llm_hugging_face
 
-load_dotenv()
+# See config.py for API key setup and default LLMs
+llm_open_ai = default_llm_open_ai
+llm_hugging_face = default_llm_hugging_face
 
-# Paid OpenAI API (https://platform.openai.com/account/api-keys)
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-# Free HuggingFace API (https://huggingface.co/settings/tokens)
-HUGGINGFACE_API_KEY = os.environ.get("HUGGINGFACE_API_KEY")
-
-#region Instantiate Language Models
-# - Different models can be used or tweaked for different results
-# - Temperature - 0-1: "randomness/diversity" of output (higher = more random)
-
-# Paid OpenAI model (https://openai.com/blog/openai-api)
-llm_open_ai = OpenAI(
-    temperature=0.9,
-    max_tokens=100
-)
-
-# Free HuggingFace model (https://huggingface.co/google/flan-t5-xl)
-llm_hugging_face = HuggingFaceHub(
-    repo_id="google/flan-t5-xl", 
-    model_kwargs={
-        "temperature": 0.6,
-        "max_length": 64
-    }
-) 
-
-#endregion
 #region Build Prompt
 # - Input variables fill in the templates in the prompt (like an fstring)
 # - The prompt is passed to the language model

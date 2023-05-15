@@ -1,32 +1,14 @@
-from dotenv import load_dotenv
-import os
+# This file demonstrates the usage of ConversationChain for maintaining context across multiple calls to the Language Model.
+# It shows an example of generating a silly bio and then asking for a serious bio based on the same input, demonstrating recall.
 
-from langchain import OpenAI, ConversationChain
-from langchain.llms import OpenAI, HuggingFaceHub
 
-#region API/LLM Setup
-# - See app.py for more details
+from langchain import ConversationChain
+from config import default_llm_open_ai, default_llm_hugging_face
 
-load_dotenv()
+# see config.py for API key setup and default LLMs
+llm_open_ai = default_llm_open_ai
+llm_hugging_face = default_llm_hugging_face
 
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-HUGGINGFACE_API_KEY = os.environ.get("HUGGINGFACE_API_KEY")
-SERPAPI_API_KEY = os.environ.get("SERPAPI_API_KEY")
-
-llm_open_ai = OpenAI(
-    temperature=0.9,
-    max_tokens=100
-)
-
-llm_hugging_face = HuggingFaceHub(
-    repo_id="google/flan-t5-xl", 
-    model_kwargs={
-        "temperature": 0.6,
-        "max_length": 64
-    }
-) 
-
-#endregion
 #region Contextual Conversation
 # - Calls to the API don't have memory or context which is very limiting
 # - A ConversationChain can be used to maintain memory/context across multiple calls

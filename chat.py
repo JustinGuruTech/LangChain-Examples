@@ -1,7 +1,8 @@
-from dotenv import load_dotenv
-import os
+# This file demonstrates the usage of Chat Messages, Chat Prompt Templates, and Chat Chains with OpenAI and HuggingFace Language Models.
+# It shows different examples of communicating with LLMs using single messages, multi-messages, and batch messages.
+# It also demonstrates the usage of Chat Prompt Templates and Chat Chains for a more streamlined approach to interacting with LLMs in a chat context.
 
-from langchain.llms import OpenAI, HuggingFaceHub
+
 from langchain.chat_models import ChatOpenAI
 from langchain import LLMChain
 from langchain.schema import (
@@ -14,30 +15,11 @@ from langchain.prompts.chat import (
     SystemMessagePromptTemplate,
     HumanMessagePromptTemplate,
 )
+from config import default_llm_open_ai, default_llm_hugging_face
 
-#region API/LLM Setup
-# - See app.py for more details
-
-load_dotenv()
-
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-HUGGINGFACE_API_KEY = os.environ.get("HUGGINGFACE_API_KEY")
-SERPAPI_API_KEY = os.environ.get("SERPAPI_API_KEY")
-
-llm_open_ai = OpenAI(
-    temperature=0.9,
-    max_tokens=100
-)
-
-llm_hugging_face = HuggingFaceHub(
-    repo_id="google/flan-t5-xl", 
-    model_kwargs={
-        "temperature": 0.6,
-        "max_length": 64
-    }
-) 
-
-#endregion
+# see config.py for API key setup and default LLMs
+llm_open_ai = default_llm_open_ai
+llm_hugging_face = default_llm_hugging_face
 
 # Note that this controls which example is run for the whole file despite it being split into regions
 example_number = 4
