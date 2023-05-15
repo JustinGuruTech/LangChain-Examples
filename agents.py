@@ -7,6 +7,9 @@ from langchain.agents import initialize_agent
 from langchain.agents import AgentType
 
 from config import default_llm_open_ai, default_llm_hugging_face
+from console_logger import ConsoleLogger
+
+console_logger = ConsoleLogger()
 
 # see config.py for API key setup and default LLMs
 llm_open_ai = default_llm_open_ai
@@ -27,6 +30,12 @@ agent = initialize_agent(
     agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, 
     verbose=True
 )
-agent.run("Find any recent articles on Guru Technologies in Layton, UT.")
+
+# Create prompt for agent and log to console
+agent_prompt = "Find any recent articles on Guru Technologies in Layton, UT."
+console_logger.log_input(agent_prompt)
+console_logger.log_thinking() # Thinking...
+
+agent.run(agent_prompt)
 
 #endregion

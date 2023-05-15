@@ -4,6 +4,9 @@
 
 from langchain import LLMChain, PromptTemplate
 from config import default_llm_open_ai, default_llm_hugging_face
+from console_logger import ConsoleLogger
+
+console_logger = ConsoleLogger()
 
 # See config.py for API key setup and default LLMs
 llm_open_ai = default_llm_open_ai
@@ -36,13 +39,25 @@ def run_task_chain(chain, task_name, task_description):
     result = chain.run(task_name=task_name, task_description=task_description)
     return result
 
+# Create example task
+task_name = "Update landing page"
+task_description = "Update the landing page to include a new section for the new product."
+
+# Format prompt with input variables for logging
+formatted_prompt = prompt.format(task_name=task_name, task_description=task_description)
+
+# Log formatted prompt
+console_logger.log_input(formatted_prompt)
+console_logger.log_thinking() # Thinking...
+
 # Makes call to LLM
 result = run_task_chain(
     chain_open_ai,
     # chain_hugging_face, # alternative model
-    task_name="Update landing page", 
-    task_description="Update the landing page to include a new section for the new product."
+    task_name=task_name, 
+    task_description=task_description
 )
-print(result)
+# Log response
+console_logger.log_response(result)
 
 #endregion
