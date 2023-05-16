@@ -2,7 +2,6 @@
 # It shows different examples of communicating with LLMs using single messages, multi-messages, and batch messages.
 # It also demonstrates the usage of Chat Prompt Templates and Chat Chains for a more streamlined approach to interacting with LLMs in a chat context.
 
-
 from langchain.chat_models import ChatOpenAI
 from langchain import LLMChain
 from langchain.schema import (
@@ -15,12 +14,13 @@ from langchain.prompts.chat import (
     SystemMessagePromptTemplate,
     HumanMessagePromptTemplate,
 )
+
 from config import default_llm_open_ai, default_llm_hugging_face
-from console_logger import ConsoleLogger
+from utils.console_logger import ConsoleLogger
 
 console_logger = ConsoleLogger()
 
-# see config.py for API key setup and default LLMs
+# See config.py for API key setup and default LLMs
 llm_open_ai = default_llm_open_ai
 llm_hugging_face = default_llm_hugging_face
 
@@ -63,11 +63,10 @@ if example_number == 1:
 # Batch messages example
 if example_number == 2:
     # Prepare prompts & log to console
-    explain_ai_prompt = "Please explain how AI works at a technical level."
-    explain_history_prompt = "Please briefly encapsulate the history of humanity."
-    console_logger.log_input(f"\nInput 1: {explain_ai_prompt}\nInput 2: {explain_history_prompt}")
+    explain_ai_prompt = "Explain how AI works"
+    explain_history_prompt = "encapsulate the history of humanity"
+    console_logger.log_input(f"{silly_gpt_prompt} Respond to the the following:\n1. {explain_ai_prompt}\n2. {explain_history_prompt}\n")
     
-    #todo: automate printing input/response pairs to console
     # Batch messages can be used to communicate with the LLM in parallel
     batch_messages = [
         [
@@ -82,10 +81,10 @@ if example_number == 2:
     result = chat.generate(batch_messages)
 
     # Log responses to console
-    console_logger.log_input("Response to input 1:\n")
-    console_logger.log_response(result.generations[0].text)
-    console_logger.log_input("Response to input 2:\n")
-    console_logger.log_response(result.generations[1].text)
+    console_logger.log(f"Input 1 - (in a silly manner) {explain_ai_prompt}:", ConsoleLogger.COLOR_CYAN)
+    console_logger.log_response(result.generations[0][0].text)
+    console_logger.log(f"Input 2 - (in a silly manner) {explain_history_prompt}:", ConsoleLogger.COLOR_CYAN)
+    console_logger.log_response(result.generations[1][0].text)
 
 #endregion
 #region Chat Prompt Templates
@@ -105,7 +104,10 @@ if example_number == 3:
     # Compose chat prompt template from the templates 
     chat_prompt = ChatPromptTemplate.from_messages([system_message_prompt, human_message_prompt])
     # Format the prompt, passing the arguments for each template in directly to the format_prompt method
-    formatted_prompt = chat_prompt.format_prompt(pirate_letter="B", text="Do you enjoy sailing the seas?")
+    formatted_prompt = chat_prompt.format_prompt(
+        pirate_letter="B", 
+        text="Do you enjoy sailing the seas?"
+    )
 
     # Log prompt to console
     console_logger.log_input(formatted_prompt.to_messages())
@@ -128,7 +130,10 @@ if example_number == 4:
     human_message_prompt = HumanMessagePromptTemplate.from_template(human_template)
 
     # Compose chat prompt template from the templates
-    chat_prompt = ChatPromptTemplate.from_messages([system_message_prompt, human_message_prompt])
+    chat_prompt = ChatPromptTemplate.from_messages([
+        system_message_prompt, 
+        human_message_prompt
+    ])
 
     # Create chat chain
     chain = LLMChain(llm=chat, prompt=chat_prompt)
@@ -137,7 +142,10 @@ if example_number == 4:
     console_logger.log_input(chain.prompt.to_messages())
 
     # Run chat
-    result = chain.run(pirate_letter="N", text="What do you do when the wind blows your ship off course?")
+    result = chain.run(
+        pirate_letter="N", 
+        text="What do you do when the wind blows your ship off course?"
+    )
     console_logger.log_response(result)
 
 #endregion

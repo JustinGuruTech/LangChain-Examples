@@ -1,10 +1,10 @@
 # This file demonstrates the usage of LLMChain with OpenAI and HuggingFace Language Models.
 # It shows how to build a prompt, create an LLMChain, and run the chain with different Language Models.
 
-
 from langchain import LLMChain, PromptTemplate
+
 from config import default_llm_open_ai, default_llm_hugging_face
-from console_logger import ConsoleLogger
+from utils.console_logger import ConsoleLogger
 
 console_logger = ConsoleLogger()
 
@@ -18,8 +18,8 @@ llm_hugging_face = default_llm_hugging_face
 # - This building block approach is important as things scale
 
 prompt = PromptTemplate(
-    input_variables=["task_name", "task_description"],
-    template="You are a meticulous project manager. Evaluate the given task and ask clarifying and exploratory questions that are within scope.\n\nTask name: {task_name}\nTask description: {task_description}"
+    input_variables=["event_objective", "team_size"],
+    template="You are an event planner for corporate team-building events. Plan an event that achieves the given objective for a team of the specified size.\n\nEvent objective: {event_objective}\nTeam size: {team_size}"
 )
 
 #endregion
@@ -32,32 +32,30 @@ chain_hugging_face = LLMChain(prompt=prompt, llm=llm_hugging_face)
 
 #endregion
 #region Run Chain
-# - To modularize use of chains, they can be run in functions
-# - This comes in handy when building applications on top of LLMs
-
-def run_task_chain(chain, task_name, task_description):
-    result = chain.run(task_name=task_name, task_description=task_description)
-    return result
+# - Chains allow calling the LLM directly with input variables with minimal overhead
+# - Chains also allow for callbacks to handle result/streams/etc. - see utils/custom_stream.py
 
 # Create example task
-task_name = "Update landing page"
-task_description = "Update the landing page to include a new section for the new product."
+event_objective = "Laser Tag Event"
+team_size = "1000 people."
 
 # Format prompt with input variables for logging
-formatted_prompt = prompt.format(task_name=task_name, task_description=task_description)
+formatted_prompt = prompt.format(
+    event_objective=event_objective, 
+    team_size=team_size
+)
 
 # Log formatted prompt
 console_logger.log_input(formatted_prompt)
 console_logger.log_thinking() # Thinking...
 
+# Set response color for logging
+console_logger.set_response_stream_color()
 # Makes call to LLM
-result = run_task_chain(
-    chain_open_ai,
+result = chain_open_ai.run(
     # chain_hugging_face, # alternative model
-    task_name=task_name, 
-    task_description=task_description
-)
-# Log response
-console_logger.log_response(result)
+    event_objective=event_objective, 
+    team_size=team_size
+) # result contains chat completion result
 
 #endregion

@@ -1,11 +1,12 @@
 # This file sets up the API keys and default language models for the examples.
 # It includes both OpenAI and HuggingFace Language Models.
 
-
 from dotenv import load_dotenv
 import os
 
 from langchain.llms import OpenAI, HuggingFaceHub
+
+from utils.custom_stream import CustomStreamCallback
 
 load_dotenv()
 
@@ -21,7 +22,9 @@ HUGGINGFACE_API_KEY = os.environ.get("HUGGINGFACE_API_KEY")
 # Paid OpenAI model (https://openai.com/blog/openai-api)
 default_llm_open_ai = OpenAI(
     temperature=0.9,
-    max_tokens=100
+    max_tokens=1000,
+    streaming=True,
+    callbacks=[CustomStreamCallback()] # Sets up output stream with colors
 )
 
 # Free HuggingFace model (https://huggingface.co/google/flan-t5-xl)
@@ -30,7 +33,8 @@ default_llm_hugging_face = HuggingFaceHub(
     model_kwargs={
         "temperature": 0.6,
         "max_length": 64
-    }
+    },
+    callbacks=[CustomStreamCallback()] # Sets up output stream with colors
 ) 
 
 #endregion
