@@ -29,7 +29,7 @@ There are several files in the `examples` folder, each demonstrating different a
 2. `basics.py`: Demonstrates using PromptTemplate & LLMChain to generate chat completions.
 3. `memory.py`: Shows how to use ConversationChain to maintain context across multiple calls.
 4. `agents.py`: Demonstrates using Agents with access to tools to perform various tasks.
-5. `chat.py`: Demonstrates the usage of Chat Messages, Chat Prompt Templates, and Chat Chains with Language Models.
+5. `chats.py`: Demonstrates the usage of Chat Messages, Chat Prompt Templates, and Chat Chains with Language Models.
 
 Individual files can be run using the following commands:
 ```
