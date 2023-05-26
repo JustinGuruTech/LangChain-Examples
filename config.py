@@ -37,4 +37,7 @@ default_llm_hugging_face = HuggingFaceHub(
     callbacks=[CustomStreamCallback()] # Sets up output stream with colors
 ) 
 
+# Sets default llm to OpenAI
+default_llm = default_llm_open_ai
+
 #endregion

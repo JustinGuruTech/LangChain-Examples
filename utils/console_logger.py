@@ -1,68 +1,133 @@
 import sys
 
-# This class handles console logging in various colors consistently across the project.
-# Additionally, handles coloring streamed output from the Language Models, which is only available on the paid OpenAI API (as far as I know).
+# ANSI color codes
+COLOR_CYAN = "\033[96m"
+COLOR_MAGENTA = "\033[95m"
+COLOR_GREEN = "\033[92m"
+COLOR_RED = "\033[91m"
+COLOR_RESET = "\033[0m"
+
+COLOR_INPUT = COLOR_CYAN
+COLOR_THINKING = COLOR_MAGENTA
+COLOR_REPSONSE = COLOR_GREEN
+COLOR_TOOL = COLOR_MAGENTA
+COLOR_ERROR = COLOR_RED
+
+
 class ConsoleLogger:
-    # ANSI color codes
-    COLOR_CYAN = "\033[96m"
-    COLOR_MAGENTA = "\033[95m"
-    COLOR_GREEN = "\033[92m"
-    COLOR_RED = "\033[91m"
-    COLOR_RESET = "\033[0m"
+    """
+    This class handles console logging in various colors consistently across the project.
+    Additionally, it handles coloring streamed output from the Language Models, which is only available on select LLMs.
+    """
 
-    COLOR_INPUT = COLOR_CYAN
-    COLOR_THINKING = COLOR_MAGENTA
-    COLOR_REPSONSE = COLOR_GREEN
+    current_stream_color = COLOR_REPSONSE
 
-    # Controls the color of streamed output
-    current_stream_color = COLOR_RESET
-
-    #region Logging Methods
-    # - These methods are used to control the color of output & input
-
-    @staticmethod
-    def log(message, color, prefix=None):
-        if prefix:
-            print(f"{color}{prefix}: {message}{ConsoleLogger.COLOR_RESET}")
-        else:
-            print(f"{color}{message}{ConsoleLogger.COLOR_RESET}")
+    # region Input
 
     @staticmethod
     def input(message, color=COLOR_INPUT):
-        user_input = input(f"{ConsoleLogger.COLOR_CYAN}{message}")
-        return user_input
+        """
+        Prints a colored message to the console and captures user input.
+        """
+        return input(f"{color}{message}{COLOR_RESET}")
+
+    @staticmethod
+    def input_with_default(message, default, show_default=True, color=COLOR_INPUT):
+        """
+        Prints a colored message to the console and captures user input with a default value.
+        """
+        prompt = f"{color}{message} (default - {default}): " if show_default else f"{color}{message}: "
+        user_input = input(prompt)
+        return default if user_input == "" else user_input
+
+    @staticmethod
+    def input_int(message, color=COLOR_INPUT):
+        """
+        Prints a colored message to the console and captures an integer user input.
+        """
+        while True:
+            try:
+                return int(input(f"{color}{message}{COLOR_RESET}"))
+            except ValueError:
+                print(f"{COLOR_ERROR}Invalid input! Please enter an integer.{COLOR_RESET}")
+
+
+    # endregion
+    # region Logging
+
+    @staticmethod
+    def log(message, color=COLOR_RESET, prefix=""):
+        """
+        Logs to console with color & an optional prefix.
+        """
+        ConsoleLogger.current_stream_color = COLOR_RESET
+        print(f"{color}{prefix}: {message}{COLOR_RESET}" if prefix else f"{color}{message}{COLOR_RESET}")
 
     @staticmethod
     def log_input(input_text):
-        print(f"{ConsoleLogger.COLOR_INPUT}INPUT: {input_text}{ConsoleLogger.COLOR_RESET}")
+        """
+        Logs with the 'INPUT: ' prefix and input color.
+        """
+        print(f"{COLOR_INPUT}INPUT: {input_text}{COLOR_RESET}")
 
     @staticmethod
     def log_thinking():
-        print(f"\n{ConsoleLogger.COLOR_THINKING}Thinking...{ConsoleLogger.COLOR_RESET}\n")
+        """
+        Logs the 'Thinking...' message to the console
+        """
+        print(f"\n{COLOR_THINKING}Thinking...{COLOR_RESET}")
 
     @staticmethod
     def log_response(response_text):
-        print(f"{ConsoleLogger.COLOR_REPSONSE}RESPONSE: {response_text}{ConsoleLogger.COLOR_RESET}")
+        """
+        Logs with the 'RESPONSE: ' prefix and response color.
+        """
+        print(f"{COLOR_REPSONSE}RESPONSE: {response_text}{COLOR_RESET}")
 
-    #endregion
-    #region Streamed output
-    # - These methods are used in custom_stream to control the color of streamed output, which is only available on the paid OpenAI API (as far as I know).
+    @staticmethod
+    def log_tool(tool_text):
+        """
+        Logs with the 'TOOL: ' prefix and tool color.
+        """
+        print(f"{COLOR_TOOL}TOOL: {tool_text}{COLOR_RESET}")
+
+    @staticmethod
+    def log_error(error_text):
+        """
+        Logs with the 'ERROR: ' prefix and error color.
+        """
+        print(f"{COLOR_ERROR}ERROR: {error_text}{COLOR_RESET}")
+
+    # endregion
+    # region Streaming
 
     @staticmethod
     def log_streaming(token: str):
-        sys.stdout.write(ConsoleLogger.current_stream_color + token + ConsoleLogger.COLOR_RESET)
+        """
+        Prints a token in the stream with the response color.
+        """
+        sys.stdout.write(COLOR_REPSONSE + token)
         sys.stdout.flush()
 
     @staticmethod
     def set_stream_color(color: str):
+        """
+        Sets the color for subsequent streamed output.
+        """
         ConsoleLogger.current_stream_color = color
 
     @staticmethod
     def set_response_stream_color():
-        ConsoleLogger.set_stream_color(ConsoleLogger.COLOR_REPSONSE)
+        """
+        Sets the color for the subsequent streamed output to the response color.
+        """
+        ConsoleLogger.set_stream_color(COLOR_REPSONSE)
 
     @staticmethod
     def set_default_stream_color():
-        ConsoleLogger.set_stream_color(ConsoleLogger.COLOR_RESET)
+        """
+        Sets the color for the subsequent streamed output to the default color.
+        """
+        ConsoleLogger.set_stream_color(COLOR_RESET)
 
-    #endregion
+    # endregion
