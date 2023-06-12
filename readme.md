@@ -14,7 +14,7 @@ API keys and default language models for OpenAI & HuggingFace are set up in `con
 
 An [OpenAI API key](https://platform.openai.com/account/api-keys) is needed for this project, but it could also be used with [HuggingFace](https://huggingface.co/settings/tokens) with a few tweaks. [SerpApi](https://serpapi.com/) is used for searching in `agents.py` and has a free tier.
 
-### Installation
+### Installation & Run
 1. Set up API keys for OpenAI (and SerpApi if running agents)
 2. Install the required packages using
 `pip install -r requirements.txt`
@@ -25,11 +25,12 @@ An [OpenAI API key](https://platform.openai.com/account/api-keys) is needed for 
 There are several files in the `examples` folder, each demonstrating different aspects of working with Language Models and the LangChain library. 
 
 **Files**
-1. `interactive_chat.py`: Sets up a conversation in the command line with memory using LangChain
-2. `basics.py`: Demonstrates using PromptTemplate & LLMChain to generate chat completions.
-3. `memory.py`: Shows how to use ConversationChain to maintain context across multiple calls.
-4. `agents.py`: Demonstrates using Agents with access to tools to perform various tasks.
-5. `chats.py`: Demonstrates the usage of Chat Messages, Chat Prompt Templates, and Chat Chains with Language Models.
+1. `main.py`: Main loop that allows for interacting with any of the below examples in a continuous manner.
+2. `interactive_chat.py`: Sets up a conversation in the command line with memory using LangChain.
+3. `basics.py`: Demonstrates using PromptTemplate & LLMChain to generate chat completions.
+4. `memory.py`: Shows how to use ConversationChain to maintain context across multiple calls.
+5. `agents.py`: Demonstrates using Agents with access to tools to perform various tasks.
+6. `chats.py`: Demonstrates the usage of Chat Messages, Chat Prompt Templates, and Chat Chains with Language Models.
 
 Individual files can be run using the following commands:
 ```
